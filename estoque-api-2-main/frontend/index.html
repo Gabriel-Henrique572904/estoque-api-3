@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html lang="pt-PT">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Estoque API - Dashboard</title>
+    
+    <!-- Google Fonts: Poppins para um design moderno e limpo -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Bootstrap 5 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Bootstrap Icons -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet">
+    
+    <style>
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: #f4f7f6;
+            color: #2c3e50;
+        }
+        .sidebar {
+            height: 100vh;
+            background: #ffffff;
+            box-shadow: 2px 0 10px rgba(0,0,0,0.05);
+            position: fixed;
+            width: 250px;
+            padding-top: 20px;
+        }
+        .sidebar a {
+            color: #6c757d;
+            text-decoration: none;
+            padding: 15px 20px;
+            display: block;
+            font-weight: 500;
+            transition: 0.3s;
+        }
+        .sidebar a:hover, .sidebar a.active {
+            background-color: #e9ecef;
+            color: #0d6efd;
+            border-left: 4px solid #0d6efd;
+        }
+        .main-content {
+            margin-left: 250px;
+            padding: 30px;
+        }
+        .card-custom {
+            border: none;
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.03);
+            transition: transform 0.2s;
+        }
+        .card-custom:hover {
+            transform: translateY(-5px);
+        }
+        .icon-box {
+            width: 50px;
+            height: 50px;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+        }
+        .bg-purple-light { background-color: #f3e8ff; color: #7e22ce; }
+        .bg-blue-light { background-color: #e0f2fe; color: #0284c7; }
+        .bg-red-light { background-color: #fee2e2; color: #dc2626; }
+        .bg-green-light { background-color: #dcfce7; color: #16a34a; }
+        
+        .ia-card {
+            background: linear-gradient(135deg, #fdfbfb 0%, #ebedee 100%);
+            border: 1px solid #dee2e6;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Menu Lateral -->
+    <div class="sidebar">
+    <h4 class="px-4 mb-4 text-primary fw-bold"><i class="bi bi-box-seam"></i> EstoquePro</h4>
+    <a href="index.html" class="active"><i class="bi bi-grid me-2"></i> Dashboard</a>
+    <a href="categorias.html"><i class="bi bi-tags me-2"></i> Categorias</a>
+    <a href="produtos.html"><i class="bi bi-box me-2"></i> Produtos</a>
+    <a href="movimentacoes.html"><i class="bi bi-arrow-left-right me-2"></i> Movimentações</a>
+
+    </div>
+
+
+    <!-- Conteúdo Principal -->
+    <div class="main-content">
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <h2 class="fw-bold">Visão Geral</h2>
+            <button class="btn btn-primary rounded-pill px-4"><i class="bi bi-plus-lg"></i> Nova Movimentação</button>
+        </div>
+
+        <!-- Indicadores (Cards) -->
+        <div class="row g-4 mb-4">
+            <div class="col-md-3">
+                <div class="card card-custom p-3 h-100">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div>
+                            <p class="text-muted mb-1 fs-6">Total de Produtos</p>
+                            <h3 class="fw-bold mb-0" id="metric-total">--</h3>
+                        </div>
+                        <div class="icon-box bg-blue-light"><i class="bi bi-boxes"></i></div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="card card-custom p-3 h-100">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div>
+                            <p class="text-muted mb-1 fs-6">Estoque Crítico</p>
+                            <h3 class="fw-bold mb-0 text-danger" id="metric-critico">--</h3>
+                        </div>
+                        <div class="icon-box bg-red-light"><i class="bi bi-exclamation-triangle"></i></div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="card card-custom p-3 h-100">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div>
+                            <p class="text-muted mb-1 fs-6">Saídas (Mês)</p>
+                            <h3 class="fw-bold mb-0" id="metric-saidas">--</h3>
+                        </div>
+                        <div class="icon-box bg-purple-light"><i class="bi bi-cart-dash"></i></div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="card card-custom p-3 h-100">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div>
+                            <p class="text-muted mb-1 fs-6">Entradas (Mês)</p>
+                            <h3 class="fw-bold mb-0" id="metric-entradas">--</h3>
+                        </div>
+                        <div class="icon-box bg-green-light"><i class="bi bi-cart-plus"></i></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Gráficos e Inteligência Artificial -->
+        <div class="row g-4">
+            <!-- Coluna do Gráfico -->
+            <div class="col-md-7">
+                <div class="card card-custom p-4 h-100">
+                    <h5 class="fw-bold mb-4">Movimentações Recentes</h5>
+                    <canvas id="movimentacoesChart" height="120"></canvas>
+                </div>
+            </div>
+
+            <!-- Coluna da IA -->
+            <div class="col-md-5">
+                <div class="card card-custom ia-card p-4 h-100">
+                    <div class="d-flex justify-content-between align-items-center mb-3">
+                        <h5 class="fw-bold text-dark mb-0"><i class="bi bi-robot text-primary me-2"></i> Assistente IA</h5>
+                        <button id="btn-ia" class="btn btn-sm btn-outline-primary rounded-pill" onclick="gerarRelatorioIA()">
+                            <i class="bi bi-magic"></i> Analisar
+                        </button>
+                    </div>
+                    <div class="p-3 bg-white rounded shadow-sm flex-grow-1" style="min-height: 150px;">
+                        <p id="ia-content" class="text-muted fs-6 mb-0">
+                            Clique em "Analisar" para que a Inteligência Artificial verifique o banco de dados e sugira ações de reposição.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Chart.js para Gráficos -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    
+    <!-- Lógica de Integração com o Backend -->
+    <script>
+        const API_BASE_URL = "http://127.0.0.1:8000";
+
+        // Configuração inicial do Gráfico (Dados estáticos de exemplo até ter a rota de métricas)
+        const ctx = document.getElementById('movimentacoesChart').getContext('2d');
+        const movimentacoesChart = new Chart(ctx, {
+            type: 'bar',
+            data: {
+                labels: ['Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sáb', 'Dom'],
+                datasets: [
+                    { label: 'Entradas', data: [12, 19, 3, 5, 2, 3, 9], backgroundColor: '#16a34a', borderRadius: 4 },
+                    { label: 'Saídas', data: [5, 10, 8, 2, 7, 1, 4], backgroundColor: '#dc2626', borderRadius: 4 }
+                ]
+            },
+            options: {
+                responsive: true,
+                plugins: { legend: { position: 'top' } },
+                scales: { y: { beginAtZero: true, grid: { borderDash: [5, 5] } }, x: { grid: { display: false } } }
+            }
+        });
+
+        // Função segura para comunicar com a LLM do backend
+        async function gerarRelatorioIA() {
+            const btn = document.getElementById('btn-ia');
+            const content = document.getElementById('ia-content');
+            
+            // Estado de carregamento
+            btn.disabled = true;
+            btn.innerHTML = '<span class="spinner-border spinner-border-sm"></span> A processar...';
+            content.innerText = "A consultar a base de dados e a gerar estratégias...";
+
+            try {
+                // Chama a rota que acabámos de criar no backend
+                const response = await fetch(`${API_BASE_URL}/ia/relatorio-estoque`);
+                
+                if (!response.ok) throw new Error("Falha na resposta da API.");
+                
+                const data = await response.json();
+                
+                // Utilização de innerText previne ataques de injeção de HTML/Scripts (XSS)
+                if(data.relatorio) {
+                    content.innerText = data.relatorio;
+                } else if (data.erro) {
+                    content.innerText = "Aviso: " + data.erro;
+                }
+            } catch (error) {
+                console.error("Erro:", error);
+                content.innerText = "Erro ao contactar o servidor. Certifique-se que o backend FastAPI está a correr (uvicorn app.main:app --reload).";
+            } finally {
+                // Restaura o botão
+                btn.disabled = false;
+                btn.innerHTML = '<i class="bi bi-arrow-clockwise"></i> Atualizar Análise';
+            }
+        }
+    </script>
+</body>
+</html>
